@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Calendar, FileDown, Home, Users, Newspaper, Megaphone, Plus, Edit, Trash2, Settings } from 'lucide-react';
 import { trpc } from '@/utils/trpc';
+import { ImageSlider } from '@/components/ImageSlider';
 
 // Import types from server
 import type { 
@@ -37,6 +38,40 @@ function App() {
   const [currentPage, setCurrentPage] = useState<PageType>('home');
   const [adminPage, setAdminPage] = useState<AdminPageType>('news');
   const [profileSubPage, setProfileSubPage] = useState<ProfilePageType>('visi_misi');
+  
+  // Placeholder carousel images - ready for dynamic URLs
+  const carouselImages = [
+    {
+      id: 1,
+      url: 'https://images.unsplash.com/photo-1562564055-71e051d33c19?w=800&h=400&fit=crop',
+      title: 'Selamat Datang di BKPSDM Pangkep',
+      description: 'Melayani dengan dedikasi untuk kemajuan aparatur sipil negara'
+    },
+    {
+      id: 2,
+      url: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=400&fit=crop',
+      title: 'Pengembangan Sumber Daya Manusia',
+      description: 'Meningkatkan kapasitas dan kompetensi pegawai melalui berbagai program pelatihan'
+    },
+    {
+      id: 3,
+      url: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=400&fit=crop',
+      title: 'Reformasi Birokrasi',
+      description: 'Mewujudkan tata kelola pemerintahan yang bersih, akuntabel, dan melayani'
+    },
+    {
+      id: 4,
+      url: 'https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?w=800&h=400&fit=crop',
+      title: 'Inovasi Pelayanan Publik',
+      description: 'Menciptakan terobosan dalam memberikan pelayanan kepegawaian yang prima'
+    },
+    {
+      id: 5,
+      url: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=800&h=400&fit=crop',
+      title: 'Kolaborasi dan Kemitraan',
+      description: 'Membangun sinergi dengan berbagai pihak untuk kemajuan bersama'
+    }
+  ];
   
   // Data states
   const [news, setNews] = useState<News[]>([]);
@@ -521,9 +556,18 @@ function App() {
         {/* Home Page */}
         {currentPage === 'home' && (
           <div className="space-y-12">
+            {/* Image Slider/Carousel */}
+            <section className="w-full">
+              <ImageSlider 
+                images={carouselImages}
+                autoRotateInterval={5000}
+                className="mb-8"
+              />
+            </section>
+
             <div className="text-center">
               <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                Selamat Datang di Portal BKPSDM
+                🏛️ Portal BKPSDM Pangkep
               </h1>
               <p className="text-xl text-gray-600 mb-8">
                 Badan Kepegawaian dan Pengembangan Sumber Daya Manusia<br />
