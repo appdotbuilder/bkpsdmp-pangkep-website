@@ -1,18 +1,51 @@
 
+import { db } from '../db';
+import { downloadsTable } from '../db/schema';
 import { type UpdateDownloadInput, type Download } from '../schema';
+import { eq } from 'drizzle-orm';
 
 export const updateDownload = async (input: UpdateDownloadInput): Promise<Download> => {
-    // This is a placeholder declaration! Real code should be implemented here.
-    // The goal of this handler is updating an existing download entry in the database.
-    return Promise.resolve({
-        id: input.id,
-        title: input.title || "Updated Title",
-        category: input.category || "Updated Category",
-        publisher: input.publisher || "Updated Publisher",
-        file_url: input.file_url || "http://example.com/file.pdf",
-        file_name: input.file_name || "updated_file.pdf",
-        hits: 0, // Preserve existing hits
-        created_at: new Date(),
-        updated_at: new Date()
-    } as Download);
+  try {
+    // Build update object with only provided fields
+    const updateData: any = {};
+    
+    if (input.title !== undefined) {
+      updateData.title = input.title;
+    }
+    
+    if (input.category !== undefined) {
+      updateData.category = input.category;
+    }
+    
+    if (input.publisher !== undefined) {
+      updateData.publisher = input.publisher;
+    }
+    
+    if (input.file_url !== undefined) {
+      updateData.file_url = input.file_url;
+    }
+    
+    if (input.file_name !== undefined) {
+      updateData.file_name = input.file_name;
+    }
+
+    // Set updated_at timestamp
+    updateData.updated_at = new Date();
+
+    // Update the download record
+    const result = await db.update(downloadsTable)
+      .set(updateData)
+      .where(eq(downloadsTable.id, input.id))
+      .returning()
+      .execute();
+
+    if (result.length === 0) {
+      throw new Error(`Download with id ${input.id} not found`);
+    }
+
+    return result[0];
+  } catch (error) {
+    console.error('Download update failed:', error);
+    throw error;
+  }
 };

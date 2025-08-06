@@ -1,8 +1,19 @@
 
+import { db } from '../db';
+import { downloadsTable } from '../db/schema';
 import { type Download } from '../schema';
+import { desc } from 'drizzle-orm';
 
 export const getDownloads = async (): Promise<Download[]> => {
-    // This is a placeholder declaration! Real code should be implemented here.
-    // The goal of this handler is fetching all download entries from the database, ordered by creation date.
-    return [];
+  try {
+    const results = await db.select()
+      .from(downloadsTable)
+      .orderBy(desc(downloadsTable.created_at))
+      .execute();
+
+    return results;
+  } catch (error) {
+    console.error('Failed to fetch downloads:', error);
+    throw error;
+  }
 };

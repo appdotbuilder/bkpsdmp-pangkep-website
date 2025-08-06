@@ -1,8 +1,19 @@
 
+import { db } from '../db';
+import { announcementsTable } from '../db/schema';
 import { type Announcement } from '../schema';
+import { desc } from 'drizzle-orm';
 
 export const getAnnouncements = async (): Promise<Announcement[]> => {
-    // This is a placeholder declaration! Real code should be implemented here.
-    // The goal of this handler is fetching all announcements from the database, ordered by publication date.
-    return [];
+  try {
+    const results = await db.select()
+      .from(announcementsTable)
+      .orderBy(desc(announcementsTable.publication_date))
+      .execute();
+
+    return results;
+  } catch (error) {
+    console.error('Failed to get announcements:', error);
+    throw error;
+  }
 };

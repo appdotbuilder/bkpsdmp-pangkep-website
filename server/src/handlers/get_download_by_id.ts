@@ -1,8 +1,28 @@
 
+import { db } from '../db';
+import { downloadsTable } from '../db/schema';
 import { type GetByIdInput, type Download } from '../schema';
+import { eq } from 'drizzle-orm';
 
 export const getDownloadById = async (input: GetByIdInput): Promise<Download | null> => {
-    // This is a placeholder declaration! Real code should be implemented here.
-    // The goal of this handler is fetching a specific download entry by ID from the database.
-    return null;
+  try {
+    const result = await db.select()
+      .from(downloadsTable)
+      .where(eq(downloadsTable.id, input.id))
+      .execute();
+
+    if (result.length === 0) {
+      return null;
+    }
+
+    const download = result[0];
+    return {
+      ...download,
+      created_at: download.created_at,
+      updated_at: download.updated_at
+    };
+  } catch (error) {
+    console.error('Failed to get download by ID:', error);
+    throw error;
+  }
 };
